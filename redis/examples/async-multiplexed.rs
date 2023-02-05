@@ -29,7 +29,7 @@ async fn test_cmd(con: &MultiplexedConnection, i: i32) -> RedisResult<()> {
         .await
 }
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() {
     let client = redis::Client::open("redis://127.0.0.1/").unwrap();
 

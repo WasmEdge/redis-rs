@@ -1,7 +1,7 @@
 use futures_util::StreamExt as _;
 use redis::AsyncCommands;
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() -> redis::RedisResult<()> {
     let client = redis::Client::open("redis://127.0.0.1/").unwrap();
     let mut publish_conn = client.get_async_connection().await?;

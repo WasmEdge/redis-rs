@@ -1,10 +1,11 @@
 use std::fmt;
 use std::io::{self, Write};
-use std::net::{self, TcpStream, ToSocketAddrs};
+// use std::net::{self, TcpStream, ToSocketAddrs};
 use std::ops::DerefMut;
 use std::path::PathBuf;
 use std::str::{from_utf8, FromStr};
 use std::time::Duration;
+use wasmedge_wasi_socket::{self as net, TcpStream, ToSocketAddrs};
 
 use crate::cmd::{cmd, pipe, Cmd};
 use crate::parser::Parser;
@@ -353,11 +354,11 @@ impl ActualConnection {
                 let addr = (host.as_str(), *port);
                 let tcp = match timeout {
                     None => TcpStream::connect(addr)?,
-                    Some(timeout) => {
+                    Some(_timeout) => {
                         let mut tcp = None;
                         let mut last_error = None;
                         for addr in addr.to_socket_addrs()? {
-                            match TcpStream::connect_timeout(&addr, timeout) {
+                            match TcpStream::connect(&addr) {
                                 Ok(l) => {
                                     tcp = Some(l);
                                     break;
@@ -511,10 +512,10 @@ impl ActualConnection {
         }
     }
 
-    pub fn set_write_timeout(&self, dur: Option<Duration>) -> RedisResult<()> {
+    pub fn set_write_timeout(&self, _dur: Option<Duration>) -> RedisResult<()> {
         match *self {
-            ActualConnection::Tcp(TcpConnection { ref reader, .. }) => {
-                reader.set_write_timeout(dur)?;
+            ActualConnection::Tcp(TcpConnection { reader: _, .. }) => {
+                // reader.set_write_timeout(dur)?;
             }
             #[cfg(feature = "tls")]
             ActualConnection::TcpTls(ref boxed_tls_connection) => {
@@ -529,10 +530,10 @@ impl ActualConnection {
         Ok(())
     }
 
-    pub fn set_read_timeout(&self, dur: Option<Duration>) -> RedisResult<()> {
+    pub fn set_read_timeout(&self, _dur: Option<Duration>) -> RedisResult<()> {
         match *self {
-            ActualConnection::Tcp(TcpConnection { ref reader, .. }) => {
-                reader.set_read_timeout(dur)?;
+            ActualConnection::Tcp(TcpConnection { reader: _, .. }) => {
+                // reader.set_read_timeout(dur)?;
             }
             #[cfg(feature = "tls")]
             ActualConnection::TcpTls(ref boxed_tls_connection) => {

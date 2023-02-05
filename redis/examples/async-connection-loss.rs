@@ -56,7 +56,7 @@ async fn run_multi<C: ConnectionLike + Clone>(mut con: C) -> RedisResult<()> {
     }
 }
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() -> RedisResult<()> {
     let mode = match env::args().nth(1).as_deref() {
         Some("default") => {

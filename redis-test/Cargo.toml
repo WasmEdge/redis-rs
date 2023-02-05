@@ -10,15 +10,15 @@ license = "BSD-3-Clause"
 rust-version = "1.59"
 
 [dependencies]
-redis = { version = "0.22.1", path = "../redis" }
+redis_wasi = { version = "0.22.1", path = "../redis" }
 
 bytes = { version = "1", optional = true }
 futures = { version = "0.3", optional = true }
 
 [features]
-aio = ["futures", "redis/aio"]
+aio = ["futures", "redis_wasi/aio"]
 
 [dev-dependencies]
-redis = { version = "0.22.1", path = "../redis", features = ["aio", "tokio-comp"] }
-tokio = { version = "1", features = ["rt", "macros", "rt-multi-thread"] }
+redis_wasi = { version = "0.22.1", path = "../redis", features = ["aio", "tokio-comp"] }
+tokio_wasi = { version = "1", features = ["rt", "macros"] }
 
